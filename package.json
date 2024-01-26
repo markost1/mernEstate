@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "proxy": "http://localhost:3000",
   "scripts": {
     "dev": "nodemon api/index.js",
     "start": "node api/index.js"
@@ -12,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.0",
     "express": "^4.18.2",
     "mongoose": "^8.1.0",
