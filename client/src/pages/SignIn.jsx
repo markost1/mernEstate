@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {  useDispatch, useSelector } from 'react-redux'; //ovaj hook koristimo da bi otpremili funkcije
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice'; //importujemo sve funkcije koje smo napravili
+import OAuth from '../components/OAuth';
 
 export default function SignIn() {
   const [formData,setFormData] = useState({});
@@ -64,6 +65,7 @@ export default function SignIn() {
         <button disabled={loading} className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"> 
         {loading ? 'Loading ...' : 'Sign in' }
         </button>
+        <OAuth /> 
       </form> 
 
       <div className='flex flex-row gap-3 mt-5'>
