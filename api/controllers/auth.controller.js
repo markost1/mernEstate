@@ -48,3 +48,24 @@ export const signin = async (req,res,next) =>{
     next(error)
   }
 }
+
+export const google = async (req,res,next) =>{
+  try {
+    //prvo provjera da li user postoji
+    const user = await User.findOne({email:req.body.email})
+    if(user){
+//ako user postojo registrujemo ga, kkreiramo token sacuvamo ga u coocie
+  const token = jwt.sign({id:user._id},process.env.JWT_SECRET)
+//ne zelimo da saljemo nazad password  odvajamo pasword od ostatka
+  const{ password:pass, ...res } = user._doc;
+  res.cookie('access_token',token,{httpOnly:true})
+  .status(200)
+  .json(rest);
+
+    }else{
+//kreiramo novog korisnika
+    }
+  } catch (error) {
+    next(error)
+  }
+}
