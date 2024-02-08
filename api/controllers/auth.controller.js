@@ -57,13 +57,30 @@ export const google = async (req,res,next) =>{
 //ako user postojo registrujemo ga, kkreiramo token sacuvamo ga u coocie
   const token = jwt.sign({id:user._id},process.env.JWT_SECRET)
 //ne zelimo da saljemo nazad password  odvajamo pasword od ostatka
-  const{ password:pass, ...res } = user._doc;
-  res.cookie('access_token',token,{httpOnly:true})
-  .status(200)
-  .json(rest);
+  const{ password:pass, ...rest } = user._doc;
+  res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest);
 
     }else{
 //kreiramo novog korisnika
+//password
+
+const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+//hasovanje passworda
+const hashedPassword = bcryptjs.hashSync(generatedPassword,10);
+//sada da sacuvamo korisnicke podatke
+const newUser = new User({
+  username: req.body.name.split(" ").join("").toLowerCase() +  Math.random().toString(36).slice(-4),
+  email:req.body.email,
+  password:hashedPassword,
+  avatar:req.body.photo
+})
+//sada je potrebno sacuvati novog korisnika
+await newUser.save()
+//opet se kreira token kao ranije
+const token = jwt.sign({id:newUser._id},process.env.JWT_SECRET);
+//odvajamo opet password i ostatak
+const{password:pass, ...res} = newUser._doc;
+res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest)
     }
   } catch (error) {
     next(error)
