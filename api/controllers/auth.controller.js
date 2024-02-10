@@ -20,7 +20,7 @@ res.status(201).json('korisnik je uspjesno kreiran')
 } 
 
 export const signin = async (req,res,next) =>{
-  const {email,password} = req.body;
+  const {email,password} = req.body; //izvrsena destrukcija emaila i passworda
   try {
 
     //prvo provjera da li email postoji ili ne i ako je ispravan provjerava se password
@@ -79,7 +79,7 @@ await newUser.save()
 //opet se kreira token kao ranije
 const token = jwt.sign({id:newUser._id},process.env.JWT_SECRET);
 //odvajamo opet password i ostatak
-const{password:pass, ...res} = newUser._doc;
+const{password:pass, ...rest} = newUser._doc;
 res.cookie('access_token',token,{httpOnly:true}).status(200).json(rest)
     }
   } catch (error) {
