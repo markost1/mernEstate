@@ -65,3 +65,17 @@ export const updateUser = async (req,res,next) =>{
 
 
 //ne radi dobro ne mogu da mjenjam podatke
+
+
+export const deleteUser = async(req,res,next) =>{
+    //ako id zahtjeva korisnika nije isti kao id paramsa
+    if(req.user.id !== req.params.id) return next(errorHandler(401,'You can only delete your own account'));
+    try {
+        await User.findByIdAndDelete(req.params.id)
+        res.clearCookie('access_token'); // nacin da se izbrise token dolazi do direktne odjave
+        res.status(200).json('user successfully deleted')
+    } catch (error) {
+        next(error);
+    }
+
+}
