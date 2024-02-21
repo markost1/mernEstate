@@ -7,7 +7,7 @@ const router = express.Router();
 //
 
 router.get('/test',test)
-router.post('/update/:id',verifyToken,updateUser) //importujemo verifyToken u rutu i ako je sve ok prelazimo na izvrsavanje funkcije update user
+router.post('/update/:id', verifyToken, updateUser) //importujemo verifyToken u rutu i ako je sve ok prelazimo na izvrsavanje funkcije update user
 
 
 export default router;

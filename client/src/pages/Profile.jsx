@@ -1,8 +1,9 @@
-// import React from 'react'
+
 import { useEffect, useRef, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { app }  from '../firebase'
+import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/user/userSlice.js";
 
 
 export default function Profile() {
@@ -12,11 +13,13 @@ export default function Profile() {
   const [filePerc, setFilePerc] =  useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const dispatch = useDispatch();
   console.log(formData);
 
   console.log(filePerc);
   //console.log(file);
 console.log(fileUploadError);
+console.log(formData);
 
   //firebase storage
   // allow read;
@@ -53,11 +56,43 @@ console.log(fileUploadError);
  );
 }
 
+//kreiranje funkcije handlechange
+
+  const handleChange = (e) =>{
+    setFormData({...formData , [e.target.id] : e.target.value })
+}
+
+//slanje pdatataka iz forme u bazu podataka
+
+const handleSubmit = async(e) =>{
+  e.preventDefault();
+  try {
+    dispatch(updateUserStart());
+    const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    }); 
+    const data = await res.json();
+    if(data.success === false){
+      dispatch(updateUserFailure(data.message));
+      return;
+    }
+
+    dispatch(updateUserSuccess(data))
+    //setUpdateSuccess(true)
+  } catch (error) {
+    dispatch(updateUserFailure(error.message))
+  }
+}
+
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="text-center my-7 text-3xl font-semibold">Profile</h1>
 
-      <form className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
        
         <input onChange={(e)=>{setFile(e.target.files[0])}} type="file" ref={fileRef} hidden accept="image/*"/>
        
@@ -75,10 +110,10 @@ console.log(fileUploadError);
           }
         </p>
        
-        <input type ='text' className="border rounded-xl p-3" placeholder="username" id='username'/>
-        <input type ='email' className="border rounded-xl p-3" placeholder="email" id='email'/>
-        <input type ='password' className="border rounded-xl p-3" placeholder="password" id='password'/>
-        <button type="submit" className="bg-slate-700 text-white rounded-xl uppercase p-3 ">Update</button>
+        <input type ='text' className="border rounded-xl p-3" placeholder="username" defaultValue={currentUser.username} id='username' onChange={handleChange}/>
+        <input type ='email' className="border rounded-xl p-3" placeholder="email" defaultValue={currentUser.email} id='email' onChange={handleChange}/>
+        <input type ='password' className="border rounded-xl p-3" placeholder="password" id='password' onChange={handleChange}/>
+        <button className="bg-slate-700 text-white rounded-xl uppercase p-3 ">Update</button>
       </form>
       <div className="flex flex-row justify-between py-3">
         <span className="text-red-500 cursor-pointer">Delete account</span>

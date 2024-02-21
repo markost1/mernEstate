@@ -26,13 +26,25 @@ const userSlice = createSlice({
         signInFailure : (state,action)=>{ //funkcija za neuspjesno prijavljivanje
             state.error = action.payload; // greska koja dobijamo u slucaju da je neupsjesno prijavljivanje
             state.loading = false;
-        }
-    } 
+        },
+        updateUserStart: (state)=>{
+            state.loading = true;
+        },
+        updateUserSuccess: (state,action) =>{
+            state.currentUser = action.payload;
+            state.loading  = false;
+            state.error = null;
+        },
+        updateUserFailure: (state,action)=>{
+            state.error =  action.payload;
+            state.loading = false;
+        },
+    },
 });
 
 //potrebno je izvesti reduktore odnosno funkcije i njih cemo koristiti na drugim mjestima kao sto je SignIn.js npr
 
-export const { signInStart,signInSuccess,signInFailure } = userSlice.actions ;
+export const { signInStart,signInSuccess,signInFailure, updateUserStart, updateUserSuccess, updateUserFailure } = userSlice.actions ;
 
 // potrebno je izvesti reducer korisnika tj dodajemo korisnicki dio slice
 
