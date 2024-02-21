@@ -51,12 +51,24 @@ const userSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
+         signoutUserStart: (state)=>{
+            state.loading = true;
+        },
+        signoutUserSuccess: (state) =>{
+            state.currentUser = null;
+            state.loading = false;
+            state.error = null;
+        },
+        signoutUserFailure: (state,action) =>{
+            state.error = action.payload;
+            state.loading = false;
+        },
     },
 });
 
 //potrebno je izvesti reduktore odnosno funkcije i njih cemo koristiti na drugim mjestima kao sto je SignIn.js npr
 
-export const { signInStart,signInSuccess,signInFailure, updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } = userSlice.actions ;
+export const { signInStart,signInSuccess,signInFailure, updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signoutUserStart, signoutUserSuccess, signoutUserFailure } = userSlice.actions ;
 
 // potrebno je izvesti reducer korisnika tj dodajemo korisnicki dio slice
 
