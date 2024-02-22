@@ -107,6 +107,8 @@ try {
   dispatch(deleteUserFailure(error.message))
 }
 }
+
+
 const handleSignOut = async () => {
 try {
   dispatch(signoutUserStart())
