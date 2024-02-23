@@ -5,7 +5,7 @@ export default function CreateListing() {
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Create Listing</h1>
   {/* kad je veliki ekran da postoje dva reda a kad je mobile size da bude jedan  */}
-      <form className="flex flex-col sm:flex-row">
+      <form className="flex flex-col sm:flex-row gap-4">
    {/* kreiranje kontejnera ki ce da sadrzi name, description adress inpute */}
     <div className="flex flex-col gap-4 flex-1">
       <input type="text" placeholder="name" className="border p-3 rounded-lg"  id="name" maxLength='62' minLength='10' required/>
@@ -74,7 +74,20 @@ export default function CreateListing() {
     </div>
 
     </div>
+    {/* NASTAVAK DESNA KOLONA KOJA CE IMATI FUNKCIONALNOST DA UPLOADUJUE SLIKE  */}
+    <div className="flex flex-col flex-1 gap-4">
+      <p className="font-semibold"> Images:
+      <span className="font-normal text-gray-600 ml-2"> The first image will be a cover (max 6)</span>
+      </p>
 
+      {/* dio za uploadovanje slika */}
+      <div className="flex gap-4">
+        <input  className="p-3 border border-gray-300 rounded w-full" type="file" id="images" accept="image/*" multiple />
+        <button className="p-3 border border-green-700 rounded text-green-700 uppercase hover:shadow-lg disabled:opacity-85">Upload</button>
+      </div>
+      <button className="bg-slate-600 p-3 rounded-lg text-yellow-50 uppercase hover:opacity-95 disabled:opacity-80">Create Listing</button>
+
+    </div>
       </form>
 
     </main>
