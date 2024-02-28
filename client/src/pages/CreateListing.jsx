@@ -1,6 +1,14 @@
+import { useState } from "react"
+
+
 
 
 export default function CreateListing() {
+
+  const [files,setFiles] = useState({})
+
+  console.log(files);
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Create Listing</h1>
@@ -82,7 +90,7 @@ export default function CreateListing() {
 
       {/* dio za uploadovanje slika */}
       <div className="flex gap-4">
-        <input  className="p-3 border border-gray-300 rounded w-full" type="file" id="images" accept="image/*" multiple />
+        <input onChange={(e)=>{setFiles(e.target.files)}} className="p-3 border border-gray-300 rounded w-full" type="file" id="images" accept="image/*" multiple />
         <button className="p-3 border border-green-700 rounded text-green-700 uppercase hover:shadow-lg disabled:opacity-85">Upload</button>
       </div>
       <button className="bg-slate-600 p-3 rounded-lg text-yellow-50 uppercase hover:opacity-95 disabled:opacity-80">Create Listing</button>
