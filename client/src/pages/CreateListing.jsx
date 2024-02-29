@@ -9,13 +9,17 @@ export default function CreateListing() {
   const [formData, setFormData] = useState({
     imageUrls: []
   })
-  const [imageUploadError , setImageUploadError] = useState(false)
+  const [imageUploadError , setImageUploadError] = useState(false);
+  const [uploading , setUploading] = useState(false)
 
   //console.log(files);
   console.log(formData);
   const handleImageSubmit = () =>{
     //kreiranje uslova
+
     if(files.length > 0 && files.length + formData.imageUrls.length < 7){
+      setUploading(true)
+      setImageUploadError(true)
       const promises = []
       for (let i = 0; i < files.length; i++) {
         promises.push(storeImage(files[i])) 
@@ -25,11 +29,15 @@ export default function CreateListing() {
         setFormData({...formData, imageUrls:formData.imageUrls.concat(urls),
         });
         setImageUploadError(false)
+        setUploading(false)
+        
       }).catch((err)=>{
         setImageUploadError('Image upload failed (2mb Max per image)')
+        setUploading(false);
       });
     }else{
       setImageUploadError('You can only upload 6 image per listing')
+      setUploading(false)
     }
 }
  const storeImage = (file) => {
@@ -147,7 +155,9 @@ export default function CreateListing() {
       {/* dio za uploadovanje slika */}
       <div className="flex gap-4">
         <input onChange={(e)=>{setFiles(e.target.files)}} className="p-3 border border-gray-300 rounded w-full" type="file" id="images" accept="image/*" multiple />
-        <button type="button" onClick={handleImageSubmit} className="p-3 border border-green-700 rounded text-green-700 uppercase hover:shadow-lg disabled:opacity-85">Upload</button>
+        <button disabled={uploading} type="button" onClick={handleImageSubmit} className="p-3 border border-green-700 rounded text-green-700 uppercase hover:shadow-lg disabled:opacity-85">
+        {uploading ? 'Uploading...' : 'Upload'}
+        </button>
       
       </div>
        <p className="text-red-700">{imageUploadError && imageUploadError}</p>
