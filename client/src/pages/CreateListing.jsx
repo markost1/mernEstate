@@ -85,7 +85,24 @@ export default function CreateListing() {
  };
 
   const handleChange = (e) =>{
-
+    if(e.target.id === 'sale' || e.target.id ==='rent'){
+      setFormData({
+        ...formData,
+        type : e.target.id,
+      })
+    }
+    if(e.target.id === 'parking' || e.target.id ==='furnished' || e.target.id === 'offer'){
+      setFormData({
+        ...formData,
+        [e.target.id] : e.target.checked,
+      })
+    }
+    if(e.target.type === 'text' || e.target.type === 'number' || e.target.type === 'textarea'){
+      setFormData({
+        ...formData,
+        [e.target.id] : e.target.value
+      })
+    }
   }
 
   return (
@@ -105,19 +122,19 @@ export default function CreateListing() {
           <span>Sell</span>
         </div>
         <div className="flex gap-2">
-          <input type="checkbox" onChange={handleChange} id="rent" className="w-5" checked = {formData.type === "rent"}/>
+          <input type="checkbox" onChange={handleChange} id="rent" className="w-5" checked = {formData.type === "rent"} />
           <span>Rent</span>
         </div>
         <div className="flex gap-2">
-          <input type="checkbox" onChange={handleChange} id="parking" className="w-5" checked={formData.parking}/>
+          <input type="checkbox" onChange={handleChange} id="parking" className="w-5" checked={formData.parking} />
           <span>Parking Spot</span>
         </div>
         <div className="flex gap-2">
-          <input type="checkbox" onChange={handleChange} id="furnished" className="w-5" checked={formData.furnished}/>
+          <input type="checkbox" onChange={handleChange} id="furnished" className="w-5" checked={formData.furnished} />
           <span>Furnished</span>
         </div>
         <div className="flex gap-2">
-          <input type="checkbox" onChange={handleChange} id="offer" className="w-5" checked={formData.offer}/>
+          <input type="checkbox" onChange={handleChange} id="offer" className="w-5" checked={formData.offer} />
           <span>Offer</span>
         </div>
     </div>
