@@ -112,6 +112,12 @@ export default function CreateListing() {
    const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if(formData.imageUrls.length < 1) {
+        return setError('You must upload one image at least')
+      }
+      if(+formData.regularPrice < +formData.discountPrice){ // kad dodamo + konvertujemo u broj podatak 
+        return setError('Discount price must be lower then regular price')
+      }
       setLoading(true);
       setError(false);
 
@@ -196,17 +202,22 @@ export default function CreateListing() {
         </div>
         
       </div>
-
-      <div className="flex items-center gap-3">
-        <input type="number" onChange={handleChange} id="discountPrice" min='1000' max="1000000" required value={formData.discountPrice}
-          className="p-3 rounded-lg border-gray-300"
+    {formData.offer &&  <div className="flex items-center gap-3">
+        <input type="number" 
+        onChange={handleChange} 
+        id="discountPrice" min='0' 
+        max="1000000" 
+        required 
+        value={formData.discountPrice}
+        className="p-3 rounded-lg border-gray-300"
         />
         <div className="flex flex-col items-center">
           <p>Discounted price</p>
           <span className="text-xs">($ / month)</span>
         </div>
         
-      </div>
+      </div>}
+     
     </div>
 
     </div>
@@ -239,7 +250,7 @@ export default function CreateListing() {
       }
 
       {/* ne reaguje btn moram da nadjem gresku */}
-      <button className="bg-slate-600 p-3 rounded-lg text-yellow-50 uppercase hover:opacity-95 disabled:opacity-80">
+      <button disabled={loading || uploading} className="bg-slate-600 p-3 rounded-lg text-yellow-50 uppercase hover:opacity-95 disabled:opacity-80">
       {loading ? 'Creating... ' : 'Create listing'} 
       </button>
       {error && <p className="text-red-700 text-sm">{error}</p> }
