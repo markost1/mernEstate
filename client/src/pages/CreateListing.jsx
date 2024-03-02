@@ -1,14 +1,14 @@
 import { useState } from "react"
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import {app} from '../firebase'
-
+import {app} from '../firebase';
+import { useSelector } from 'react-redux';
 
 export default function CreateListing() {
-
+  const {currentUser} = useSelector(state => state.user) //korisnik 
   const [files, setFiles] = useState({})
   const [formData, setFormData] = useState({
     imageUrls: [],
-    name:'Markos',
+    name:'',
     description:'',
     address:'',
     type:'rent',
@@ -21,7 +21,11 @@ export default function CreateListing() {
     furnished:false,
   })
   const [imageUploadError , setImageUploadError] = useState(false);
-  const [uploading , setUploading] = useState(false)
+  const [uploading , setUploading] = useState(false);
+  //pracenje errora
+  const [error,setError] = useState(false);
+  //efekat ocitavanja
+  const [ loading, setLoading] = useState(false)
 
   //console.log(files);
   console.log(formData);
@@ -105,11 +109,39 @@ export default function CreateListing() {
     }
   }
 
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setError(false);
+
+      const res = await fetch('/api/listing/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          userRef: currentUser._id, //da ynamo koji korisnik updejtuje podatke nastavak 6,27,24
+        }),
+      });
+
+      const data = await res.json();
+      setLoading(false);
+      if(data.success === false){
+        setError(data.message);
+      }
+    } catch (error) {
+      setError(error.message);
+      setLoading(false)
+    }
+   }
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Create Listing</h1>
   {/* kad je veliki ekran da postoje dva reda a kad je mobile size da bude jedan  */}
-      <form className="flex flex-col sm:flex-row gap-4">
+      <form onSubmit = {handleSubmit} className="flex flex-col sm:flex-row gap-4">
    {/* kreiranje kontejnera ki ce da sadrzi name, description adress inpute */}
     <div className="flex flex-col gap-4 flex-1">
       <input type="text" onChange={handleChange} placeholder="name" className="border p-3 rounded-lg"  id="name" maxLength='62' minLength='10' required value={formData.name}/>
@@ -166,7 +198,7 @@ export default function CreateListing() {
       </div>
 
       <div className="flex items-center gap-3">
-        <input type="number" onChange={handleChange} id="discountPrice" min='1' max="10" required value={formData.discountPrice}
+        <input type="number" onChange={handleChange} id="discountPrice" min='1000' max="1000000" required value={formData.discountPrice}
           className="p-3 rounded-lg border-gray-300"
         />
         <div className="flex flex-col items-center">
@@ -205,7 +237,12 @@ export default function CreateListing() {
         // console.log(url) //vraca url ove
         })
       }
-      <button className="bg-slate-600 p-3 rounded-lg text-yellow-50 uppercase hover:opacity-95 disabled:opacity-80">Create Listing</button>
+
+      {/* ne reaguje btn moram da nadjem gresku */}
+      <button className="bg-slate-600 p-3 rounded-lg text-yellow-50 uppercase hover:opacity-95 disabled:opacity-80">
+      {loading ? 'Creating... ' : 'Create listing'} 
+      </button>
+      {error && <p className="text-red-700 text-sm">{error}</p> }
     
     </div>
       </form>
