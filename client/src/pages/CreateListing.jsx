@@ -2,7 +2,7 @@ import { useState } from "react"
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import {app} from '../firebase';
 import { useSelector } from 'react-redux';
-
+import { useNavigate } from 'react-router-dom'
 export default function CreateListing() {
   const {currentUser} = useSelector(state => state.user) //korisnik 
   const [files, setFiles] = useState({})
@@ -26,7 +26,7 @@ export default function CreateListing() {
   const [error,setError] = useState(false);
   //efekat ocitavanja
   const [ loading, setLoading] = useState(false)
-
+  const navigate = useNavigate();
   //console.log(files);
   console.log(formData);
   const handleImageSubmit = () =>{
@@ -137,6 +137,7 @@ export default function CreateListing() {
       if(data.success === false){
         setError(data.message);
       }
+      navigate(`/listing/${data._id}`)
     } catch (error) {
       setError(error.message);
       setLoading(false)
