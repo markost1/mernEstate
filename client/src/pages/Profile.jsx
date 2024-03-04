@@ -13,7 +13,8 @@ export default function Profile() {
   const [filePerc, setFilePerc] =  useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const [updateSuccess, setUpdateSuccess] = useState(false)
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingError, setShowlistingError] = useState(false)
 
   const dispatch = useDispatch();
   console.log(formData);
@@ -124,6 +125,20 @@ try {
 }
 }
 
+const handleShowListings = async() => {
+  try {
+    setShowlistingError(false)
+    const res = await fetch(`/api/user/listings/${currentUser._id}`)
+    const data = res.json();
+    if(data.success === false){
+      setShowlistingError(true)
+      return
+    }
+  } catch (error) {
+    setShowlistingError(true)
+  }
+}
+
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="text-center my-7 text-3xl font-semibold">Profile</h1>
@@ -162,6 +177,10 @@ try {
       </div>
       <p className="text-red-700 mt-5">{error ? error : ''}</p>
       <p className="text-green-700 mt-5">{updateSuccess ? 'Data successfully updated' : ' '}</p>
+      <button onClick={handleShowListings} className="text-green-700 w-full">Show listings</button>
+      <p className="text-red-600 mt-5">{showListingError ? 'Error showing listing' : ''}</p>
+      
+
     </div>
   )
 }
