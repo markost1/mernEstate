@@ -14,7 +14,8 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [showListingError, setShowlistingError] = useState(false)
+  const [showListingError, setShowlistingError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
 
   const dispatch = useDispatch();
   console.log(formData);
@@ -129,11 +130,15 @@ const handleShowListings = async() => {
   try {
     setShowlistingError(false)
     const res = await fetch(`/api/user/listings/${currentUser._id}`)
-    const data = res.json();
+    const data = await res.json();
+    
     if(data.success === false){
-      setShowlistingError(true)
-      return
+      setShowlistingError(true);
+      return;
     }
+    
+    setUserListings(data);
+   // console.log(userListings);
   } catch (error) {
     setShowlistingError(true)
   }
@@ -177,10 +182,32 @@ const handleShowListings = async() => {
       </div>
       <p className="text-red-700 mt-5">{error ? error : ''}</p>
       <p className="text-green-700 mt-5">{updateSuccess ? 'Data successfully updated' : ' '}</p>
-      <button onClick={handleShowListings} className="text-green-700 w-full">Show listings</button>
+      <button type="button" onClick={handleShowListings} className="text-green-700 w-full">Show listings</button>
       <p className="text-red-600 mt-5">{showListingError ? 'Error showing listing' : ''}</p>
-      
-
+   
+        {userListings && userListings.length > 0 && 
+          
+          userListings.map((listing)=>{
+            return <>
+            <div key={listing._id} className="flex border justify-between items-center p-3">
+           
+            <Link to={`listing/${listing._id}`}>
+              <img src={listing.imageUrls[0]} alt="listinf image" className="w-16 h-16 object-cover radius "/>
+              </Link>
+              <Link to={`listing/${listing._id}`} className="font-bold">
+                <p >{listing.name}</p>
+              </Link>
+              <div className="flex flex-col items-center gap-2">
+                <button className="text-red-500 uppercase">Delete</button>
+                <button className="text-green-600 uppercase">Edit</button>
+              </div>
+              </div>
+            </>
+            
+          }) //kraj metode map
+          
+          } 
+        
     </div>
   )
 }

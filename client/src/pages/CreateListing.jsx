@@ -242,7 +242,9 @@ export default function CreateListing() {
           return (
             <div key={url} className="flex justify-between p-3 border items-center">
               <img src={url} alt='listing images' className="w-20 h-20 object-cover rounded-lg" />
-              <button type="button" onClick={()=>handleRemoveImage(index)} className=" p-3 text-red-500 uppercase hover:opacity-75">Delete</button>
+              <button type="button" onClick={()=>handleRemoveImage(index)} className=" p-3 text-red-500 uppercase hover:opacity-75">
+              Delete
+              </button>
             </div>       
           )
   
