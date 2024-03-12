@@ -208,10 +208,10 @@ try {
             return <>
             <div key={listing._id} className="flex border justify-between items-center p-3">
            
-            <Link to={`listing/${listing._id}`}>
+            <Link to={`/listing/${listing._id}`}>
               <img src={listing.imageUrls[0]} alt="listinf image" className="w-16 h-16 object-cover radius "/>
               </Link>
-              <Link to={`listing/${listing._id}`} className="font-bold">
+              <Link to={`/listing/${listing._id}`} className="font-bold">
                 <p >{listing.name}</p>
               </Link>
               <div className="flex flex-col items-center gap-2">
