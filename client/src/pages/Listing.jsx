@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import {useParams} from 'react-router-dom';
-//import swipera
+// Import Swiper React components
+import { Navigation , Pagination, Scrollbar, A11y  } from 'swiper/modules'
+
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from 'swiper';
-import { Navigation } from "swiper/modules";
+
 import 'swiper/css/bundle';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+
 
 
 export default function Listing() {
-SwiperCore.use(Navigation)
+
 const [ listing , setListing] = useState(null)
 const [ loading, setLoading] = useState(false) // efekat ocitavanja
 const [error, setError] =  useState(false) //podesavanje greske 
@@ -46,9 +51,21 @@ const params = useParams(); //inicijalizujem useParams
     <main>
       {loading && <p className="text-center mt-7 text-2xl"> Loading...</p>}
       {error && <p className="text-center mt-7 text-2xl">Something went wrong</p>}
-      {listing && !loading && !error && (
-        <h1>{listing.name}</h1>
-      )}
+      {listing && !loading && !error && 
+      <div className="flex justify-center">
+        <Swiper modules={[Navigation, Pagination, Scrollbar, A11y]} navigation loop className="w-full h-[550px]">
+          {listing.imageUrls.map(url => (
+              <SwiperSlide key={url}  >
+                {/* <div className="flex justify-center h-[550px] bg-center bg-strech " style={{background:`url(${url}) center no-repeat`, backgroundSize:'cover'}}>  
+                </div> */}
+                <div className="flex items-center justify-center h-[550px] bg-black">
+                <img src={url}  />
+                </div>
+              </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+      }
     </main>
   )
 }
