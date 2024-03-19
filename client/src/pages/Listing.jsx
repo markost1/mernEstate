@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import {useParams} from 'react-router-dom';
+
 // Import Swiper React components
 import { Navigation , Pagination, Scrollbar, A11y  } from 'swiper/modules';
 
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-
+import {useSelector} from 'react-redux';
 import 'swiper/css/bundle';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -22,7 +23,7 @@ const [error, setError] =  useState(false) //podesavanje greske
 const [copied, setCopied] = useState(false)
 
 const params = useParams(); //inicijalizujem useParams
-
+const {currentUser} = useSelector((state)=> state.user)
   //useEffect hook = kad se izvrsi renerovanje stranice izvrsava se funkcija 
   useEffect(()=>{
     // fecuje podatke listinga
@@ -56,7 +57,7 @@ const params = useParams(); //inicijalizujem useParams
       {error && <p className="text-center mt-7 text-2xl">Something went wrong</p>}
       {listing && !loading && !error && 
       <div>
-        <Swiper modules={[Navigation, Pagination, Scrollbar, A11y]} navigation loop className="w-full h-[550px]">
+        <Swiper modules={[Navigation, Pagination, Scrollbar, A11y]} navigation loop  className="w-full h-[550px]">
           {listing.imageUrls.map(url => (
               <SwiperSlide key={url}  >
                 {/* <div className="flex justify-center h-[550px] bg-center bg-strech " style={{background:`url(${url}) center no-repeat`, backgroundSize:'cover'}}>  
@@ -132,7 +133,16 @@ const params = useParams(); //inicijalizujem useParams
             {listing.furnished ?  'Namjesten' : 'Nije namjesten'}
             </li>
           </ul>
+          {currentUser && listing.userRef !== currentUser._id && (
+              <button className="p-2 bg-slate-700 text-white rounded-lg mt-4 uppercase hover:opacity-95">
+              Contact Landlord
+              </button>
+
+          )}
         </div>
+{/* mislim da ovdje treba contact */}
+
+
       </div>
       }
       
