@@ -13,14 +13,15 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 //react icons 
 import {FaMapMarkerAlt, FaBath, FaParking, FaChair, FaBed, FaExpand, FaShare} from 'react-icons/fa';
-
+import Contact from "../components/Contact";
 
 export default function Listing() {
 
 const [ listing , setListing] = useState(null)
 const [ loading, setLoading] = useState(false) // efekat ocitavanja
 const [error, setError] =  useState(false) //podesavanje greske 
-const [copied, setCopied] = useState(false)
+const [copied, setCopied] = useState(false);
+const [contact, setContact] = useState(false)
 
 const params = useParams(); //inicijalizujem useParams
 const {currentUser} = useSelector((state)=> state.user)
@@ -55,7 +56,7 @@ const {currentUser} = useSelector((state)=> state.user)
     <main>
       {loading && <p className="text-center mt-7 text-2xl"> Loading...</p>}
       {error && <p className="text-center mt-7 text-2xl">Something went wrong</p>}
-      {listing && !loading && !error && 
+      {listing && !loading && !error && (
       <div>
         <Swiper modules={[Navigation, Pagination, Scrollbar, A11y]} navigation loop  className="w-full h-[550px]">
           {listing.imageUrls.map(url => (
@@ -133,18 +134,18 @@ const {currentUser} = useSelector((state)=> state.user)
             {listing.furnished ?  'Namjesten' : 'Nije namjesten'}
             </li>
           </ul>
-          {currentUser && listing.userRef !== currentUser._id && (
-              <button className="p-2 bg-slate-700 text-white rounded-lg mt-4 uppercase hover:opacity-95">
+          {currentUser && listing.userRef !== currentUser._id && !contact && (
+              <button onClick={()=>setContact(true)} className="p-2 bg-slate-700 text-white rounded-lg mt-4 uppercase hover:opacity-95">
               Contact Landlord
               </button>
 
           )}
-        </div>
-{/* mislim da ovdje treba contact */}
-
-
+       {contact && <Contact listing = {listing} /> } 
+       {listing.userRef}
+           </div>
       </div>
-      }
+      
+      )}
       
 
     </main>
