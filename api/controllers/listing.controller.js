@@ -62,3 +62,61 @@ export const getListing = async (req, res, next) =>{
        console.log(error); 
     }
 }
+
+export const getListings = async(req,res,next) => {
+try {
+    //za paginaciju
+    const limit = parseInt(req.query.limit)|| 9; //ako postoji limit ako ne koristi 9
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    // pisanje querija
+    let offer = req.query.offer;
+    if(offer === undefined || offer === false){
+        offer = {$in:[false, true]} // trazi sve ako je undefined ili ako nije selektovana , sve prikazilet 
+    }
+
+    let furnished = req.query.furnished;
+    if(furnished === undefined || furnished === false){
+        furnished = {$in:[false,true]};
+    }
+
+    let parking = req.query.parking;
+    if(parking === undefined || parking === false){
+        parking = {$in:[false,true]};
+    }
+
+    let type = req.query.type;
+    if(type === undefined || type === 'all'){
+        type = {$in:['sale','rent']};
+    }
+
+    //searc term tekst iside bar
+
+    const searchTerm = req.query.searchTerm || '';
+
+    //sortiranje
+
+    const sort = req.query.sort  || 'createdAt'; 
+    const order = req.query.order || 'desc'; // odredjivanje redosleda;
+
+    // sad dobijanje liatinga na osnovu queria
+    //regex je funkcionalnost pretrazivanj za mongo db $regex  
+    const listings = await( Listing.find({
+        name:{$regex:searchTerm, $options:'i'}, //'i' nebitno pisem li u pretazuvac mala ili velika slova
+        offer,
+        furnished,
+        parking,
+        type,
+    }).sort(
+        {[sort]:order} //sortiraj podatke po redu koji zadajemo u koliko ga nema 'desc'
+    ).limit(limit).skip(startIndex)
+    
+    
+    )
+return res.status(200).json(listings)
+
+
+} catch (error) {
+    next(error)
+}
+
+}
