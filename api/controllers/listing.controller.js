@@ -112,7 +112,7 @@ try {
     
     
     )
-return res.status(200).json(listings)
+return res.status(200).json(listings);
 
 
 } catch (error) {
