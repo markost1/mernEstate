@@ -13,14 +13,14 @@ export default function Header() {
   const handleSubmit = (e) =>{
     e.preventDefault(); //prevencija uobicajenog ponasanja forme
     const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set('SearchTerm', searchTerm)
+    urlParams.set('searchTerm', searchTerm)
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`)
     
   }
  useEffect(()=>{
   const urlParams = new URLSearchParams(location.search)
-  const searchTermFromUrl = urlParams.get('SearchTerm');
+  const searchTermFromUrl = urlParams.get('searchTerm');
   if(searchTermFromUrl){
     setSearchTerm(searchTermFromUrl)
   }

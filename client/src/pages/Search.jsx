@@ -1,8 +1,10 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 export default function Search() {
-
+       
+        const navigate = useNavigate();
         const [sideBarData, setSideBarData] = useState({
             searchTerm: '',
             type: 'all',
@@ -22,7 +24,7 @@ export default function Search() {
                     setSideBarData({...sideBarData, searchTerm: e.target.value})
                  }
 
-                 if(e.target.id === 'parking' || e.target.id ==='furnished' || e.target.offer ==='offer'){
+                 if(e.target.id === 'parking' || e.target.id ==='furnished' || e.target.id ==='offer'){
                     setSideBarData({...sideBarData, [e.target.id]: e.target.checked || e.target.checked === 'true' ? true : false})
                  }
 
@@ -35,12 +37,32 @@ export default function Search() {
 
 
         }
-        console.log(sideBarData);
+
+        const handleSubmit = (e) =>{
+            e.preventDefault();
+            // prvo informacije o URLu
+            const urlParams = new URLSearchParams(window.location.search);
+            //podesvamo sadrzaj urla
+            urlParams.set('searchTerm', sideBarData.searchTerm);
+            urlParams.set('type',sideBarData.type);
+            urlParams.set('parking', sideBarData.parking);
+            urlParams.set('furnished', sideBarData.furnished);
+            urlParams.set('offer', sideBarData.offer);
+            urlParams.set('sort',sideBarData.sort);
+            urlParams.set('order',sideBarData.order);
+
+            //pretvaranje queri-a u string
+
+            const searchQuery = urlParams.toString();
+
+            navigate(`/search?${searchQuery}`)
+            
+        }
 
   return (
     <div className='flex flex-col md:flex-row'>
         <div className='p-7 border-b-2 md:border-r-2 md:min-h-screen'>
-            <form className='flex flex-col gap-8'>
+            <form onSubmit={handleSubmit} className='flex flex-col gap-8'>
                 <div className='flex items-center gap-2'>
                     <label className='whitespace-nowrap font-semibold'>Search Term:</label>
                     <input type='text' 
