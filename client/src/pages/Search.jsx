@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 
@@ -14,6 +14,52 @@ export default function Search() {
             sort:'created_at',
             order:'desc',
         })
+        const [loading,setLoading] = useState(false)
+        const [listing,setListing] = useState([]);
+        console.log(listing);
+
+        useEffect(()=>{
+            const urlParams = new URLSearchParams(location.search);
+            const searchTermFromUrl = urlParams.get('searchTerm');
+            const typeFromUrl = urlParams.get('type');
+            const parkingFromUrl = urlParams.get('parking');
+            const furnishedFromUrl = urlParams.get('furnished');
+            const offerFromUrl = urlParams.get('offer');
+            const sortFromUrl = urlParams.get('sort');
+            const orderFromUrl = urlParams.get('order');
+
+            if(searchTermFromUrl ||
+                typeFromUrl ||
+                parkingFromUrl || 
+                furnishedFromUrl ||
+                offerFromUrl ||
+                sortFromUrl ||
+                orderFromUrl 
+                ){
+                    setSideBarData({
+                        searchTerm: searchTermFromUrl || '',
+                        type:typeFromUrl || 'all',
+                        parking: parkingFromUrl === 'true' ? true : false,
+                        furnished: furnishedFromUrl === 'true' ? true : false,
+                        offer: offerFromUrl === 'true' ? true : false,
+                        sort:sortFromUrl || 'created_at',
+                        order:orderFromUrl || 'desc',
+                    })
+                }
+
+                const fetchListing = async () => {
+                        //ovdje da fecujem podatke 
+                        setLoading(true)
+                        const searchQuery = urlParams.toString()
+                        const res = await fetch(`/api/listing/get?${searchQuery}`)
+                        const data = await res.json();
+                        setListing(data)
+                        setLoading(false)
+                }
+
+                fetchListing();
+
+        },[location.search])
 
         const handleChange = (e) => {
                 if(e.target.id === 'all' || e.target.id === 'rent' || e.target.id ==='sale'){ 
@@ -161,6 +207,11 @@ export default function Search() {
         {/* drugi kontejner ui */}
         <div className='text-3xl text-slate-600 font-semibold border-b-2 p-3 mt-5 '>
             <h1>Listing Results:</h1>
+            {listing.map((list)=>{
+                return <>
+                    <p>{list.name}</p>
+                </>
+            })}
         </div>
     </div>
   )

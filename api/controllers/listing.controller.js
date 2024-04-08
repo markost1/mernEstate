@@ -70,17 +70,17 @@ try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     // pisanje querija
     let offer = req.query.offer;
-    if(offer === undefined || offer === false){
+    if(offer === undefined || offer === 'false'){
         offer = {$in:[false, true]} // trazi sve ako je undefined ili ako nije selektovana , sve prikazilet 
     }
 
     let furnished = req.query.furnished;
-    if(furnished === undefined || furnished === false){
+    if(furnished === undefined || furnished === 'false'){
         furnished = {$in:[false,true]};
     }
 
     let parking = req.query.parking;
-    if(parking === undefined || parking === false){
+    if(parking === undefined || parking === 'false'){
         parking = {$in:[false,true]};
     }
 
