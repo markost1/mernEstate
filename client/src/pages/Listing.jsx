@@ -90,7 +90,7 @@ const {currentUser} = useSelector((state)=> state.user)
           <p className="text-2xl font-semibold">
           {/* ovaj dio je zanimljiv kod yanka eura pokazuje vrijednost u zavisnosti od uslova */}
           {listing.name} - €{' '}     
-          {listing.offer ? listing.discountPrice.toLocaleString('en-US')
+          {listing.offer ? + listing.regularPrice - + listing.discountPrice
           : listing.regularPrice.toLocaleString('en-US')}   
           {listing.type === 'rent' && ' /months'}
           </p>
@@ -99,10 +99,15 @@ const {currentUser} = useSelector((state)=> state.user)
           {listing.address}
           </p>
           {/* dio za sale ili rent */}
-          <div>
+          <div className="flex gap-10">
             <p className="bg-red-500 p-3 w-full max-w-[200px] rounded-md text-white text-center">
               {listing.type === 'rent' ? 'For Rent' : 'For Sale'}
             </p>
+            
+              {listing.offer && (<p className="bg-green-500 p-3 w-full max-w-[200px] rounded-md text-white text-center">
+                € {listing.discountPrice} Off
+              </p>)}
+            
           </div>
 
           <p className="text-slate-800">
