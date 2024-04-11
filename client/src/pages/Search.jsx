@@ -17,7 +17,8 @@ export default function Search() {
         })
         const [loading,setLoading] = useState(false)
         const [listings,setListing] = useState([]);
-        console.log(listings);
+        const [showMore,setShowMore] = useState(false)
+       // console.log(listings);
 
         useEffect(()=>{
             const urlParams = new URLSearchParams(location.search);
@@ -51,9 +52,15 @@ export default function Search() {
                 const fetchListing = async () => {
                         //ovdje da fecujem podatke 
                         setLoading(true)
+                        setShowMore(false)
                         const searchQuery = urlParams.toString()
                         const res = await fetch(`/api/listing/get?${searchQuery}`)
                         const data = await res.json();
+                        if(data.length > 8){
+                            setShowMore(true)
+                        }else{
+                            setShowMore(false)
+                        }
                         setListing(data)
                         setLoading(false)
                 }
@@ -104,6 +111,21 @@ export default function Search() {
 
             navigate(`/search?${searchQuery}`)
             
+        }
+
+        const onShowMoreClick = async () => {
+            const numberOfListings = listings.length; //prvo uzimam koliko je listinga
+            const startIndex = numberOfListings
+            const urlParams = new URLSearchParams(location.search);
+            urlParams.set('startIndex' , startIndex);
+            const searchQuery = urlParams.toString();
+            const res = await fetch(`/api/listing/get?${searchQuery}`);
+            const data = await res.json();
+            if(data.length < 9 ){
+                setShowMore(false);
+            }
+            setListing([...listings, ...data])
+
         }
 
   return (
@@ -223,6 +245,11 @@ export default function Search() {
                 </>
             })
           }
+          {showMore && (
+            <button onClick={()=>{onShowMoreClick()}} className="text-green-600 text-xl w-full p-7">
+            Show More
+            </button>
+            )}
           </div>
         </div>
     </div>
