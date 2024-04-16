@@ -1,7 +1,58 @@
 // import React from 'react'
+import { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom';
+// Import Swiper React components
+import { Navigation , Pagination, Autoplay, Scrollbar, A11y  } from 'swiper/modules';
+//Import Swiper
+import { Swiper, SwiperSlide } from 'swiper/react';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import 'swiper/css/autoplay';
 
 export default function Home() {
+  const [offerListings, setOfferListings] = useState([]);
+  const [saleListings, setSaleListings] = useState([]);
+  const [rentListings, setRentListings] = useState([]);
+
+  useEffect(()=>{
+    const fetchOfferListings = async() =>{
+      try {
+        const res = await fetch('/api/listing/get?offer=true&limit=4');
+        const data = await res.json();
+        setOfferListings(data)
+        fetchSaleListings()
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+      const fetchSaleListings = async() =>{
+        try {
+          const res = await fetch('/api/listing/get?type=sale&limit=4');
+          const data = await res.json()
+          setSaleListings(data)
+          fetchRentListings()
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      const fetchRentListings = async()=>{
+        try {
+          const res = await fetch('/api/listing/get?type=rent&limit=4')
+          const data = await res.json()
+          setRentListings(data)
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    fetchOfferListings();
+  },[])
+
+
   return (
     <div>
       {/* top */}
@@ -23,11 +74,25 @@ export default function Home() {
     </div>
 
 
-      {/* search */}
+      {/* sLIDER KORISTIM SLIKE IZ POSLEDNJIH OFFERA  swiper*/}
+     <Swiper  modules={[Navigation, Pagination, Autoplay, Scrollbar, A11y]} navigation loop autoplay pagination={{clickable:true}} Autoplay>
+    {
+      offerListings && offerListings.length > 0 && 
+      offerListings.map((listing)=>(
+        <SwiperSlide key={listing.id}>
+          <div style={{background:`url(${listing.imageUrls[0]}) center no-repeat`,backgroundSize:"cover"}}
+          className='h-[500px]' key={listing.id}></div>
+         
+        </SwiperSlide>
+      ))
+    }
 
+
+     </Swiper>
 
 
       {/* za sell rent offer */}
+      <h1>Nstavak da vidim ima li paginacije</h1>
     </div>
   )
 }

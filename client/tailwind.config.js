@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [ //obavezno restartovati server kad mjenjam konfiguraciju... server klienta
-    require('@tailwindcss/line-clamp'),
-  ],
+  // plugins: [ //obavezno restartovati server kad mjenjam konfiguraciju... server klienta
+  //   require('@tailwindcss/line-clamp'),
+  // ],
 }
