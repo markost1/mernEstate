@@ -11,6 +11,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import 'swiper/css/autoplay';
+import ListingItem from '../components/ListingItem';
 
 export default function Home() {
   const [offerListings, setOfferListings] = useState([]);
@@ -92,7 +93,54 @@ export default function Home() {
 
 
       {/* za sell rent offer */}
-      <h1>Nstavak da vidim ima li paginacije</h1>
+      <div className='max-w-6xl mx-auto flex flex-col justify-center gap-8 my-10'>
+    {/* offer */}
+
+    {offerListings && offerListings.length > 0 && (
+      <div className=''>
+      <div className='my-3'>
+      <h2 className='text-2xl font-semibold text-slate-600 '>Recent offer</h2>
+      <Link className='text-sm text-blue-800 hover:underline' to={'/search?offer=true'}>Show more offers</Link>
+      </div>
+      <div className=' flex flex-wrap gap-2'>
+        {offerListings.map((listing)=>(
+          <ListingItem listing={listing} key={listing._id} />
+        ))}
+      </div>
+      </div>
+    )}
+    {/* sale */}
+    {saleListings && saleListings.length > 0 && (
+      <div className=''>
+      <div className='my-3'>
+      <h2 className='text-2xl font-semibold text-slate-600 '>Recent places for sale</h2>
+      <Link className='text-sm text-blue-800 hover:underline' to={'/search?type=sale'}>Show more offers</Link>
+      </div>
+      <div className=' flex flex-wrap gap-2'>
+        {saleListings.map((listing)=>(
+          <ListingItem listing={listing} key={listing._id} />
+        ))}
+      </div>
+      </div>
+    )}
+    {/* rent */}
+    {rentListings && rentListings.length > 0 && (
+      <div className=''>
+      <div className='my-3'>
+      <h2 className='text-2xl font-semibold text-slate-600 '>Recent listings for rent</h2>
+      <Link className='text-sm text-blue-800 hover:underline' to={'/search?type=rent'}>Show more offers</Link>
+      </div>
+      <div className=' flex flex-wrap gap-2'>
+        {offerListings.map((listing)=>(
+          <ListingItem listing={listing} key={listing._id} />
+        ))}
+      </div>
+      </div>
+    )}
+
+      </div>
+
+
     </div>
   )
 }
