@@ -69,6 +69,11 @@ export default function Search() {
 
         },[location.search])
 
+        // da vidim radi li ovo ** probao i rijesio radi kako treba
+        useEffect(() => {
+            window.scrollTo(0, 0)
+          }, [])
+
         const handleChange = (e) => {
                 if(e.target.id === 'all' || e.target.id === 'rent' || e.target.id ==='sale'){ 
                     setSideBarData({...sideBarData, type:e.target.id})
